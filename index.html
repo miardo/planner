@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./pages/index.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planner</title>
+</head>
+<body class="root">
+    <header class="header">
+      <h1 class="header-title">Тестовое задание - Планировщик</h1>
+    </header>
+    <main class="content">
+      <div class="calendar">
+        <button class="calendar__scroll-button" type="button">&#8678;</button>
+        <p class="calendar__date">21.09</p>
+        <p class="calendar__date">22.09</p>
+        <p class="calendar__date">23.09</p>
+        <p class="calendar__date">24.09</p>
+        <p class="calendar__date">25.09</p>
+        <p class="calendar__date">26.09</p>
+        <p class="calendar__date">27.09</p>
+        <button class="calendar__scroll-button" type="button">&#8680;</button>
+      </div>
+      <div class="backlog">
+        <h2 class="backlog__title">Backlog</h2>
+        <form name="search-form" class="backlog__search-form" action="" method="get">
+          <input class="backlog__search-input" name="search" placeholder="Поиск" type="search">
+          <button class="backlog__search-button" type="submit"></button>
+        </form>
+        <section class="backlog__elements">
+        </section>
+      </div>
+    </main>
+    <footer class="footer">
+      <p class="footer__copyright">&copy; 2021 by Marat Karimov</p>
+    </footer>
+    <template class="task__template">
+      <article class="backlog__box" draggable="true">
+        <h4 class="backlog__box-name"></h4>
+        <p class="backlog__box-text"></p>
+      </article>
+    </template>
+    <template class="user__template">
+        <p class="calendar__user" id=""></p>
+        <p class="calendar__task"></p>
+        <p class="calendar__task"></p>
+        <p class="calendar__task"></p>
+        <p class="calendar__task"></p>
+        <p class="calendar__task"></p>
+        <p class="calendar__task"></p>
+        <p class="calendar__task"></p>
+        <p class="calendar__task"></p>
+    </template>
+    <script src="./scripts/index.js"></script>
+</body>
+</html>
