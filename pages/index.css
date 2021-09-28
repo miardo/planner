@@ -166,7 +166,6 @@
 
 .backlog__elements {
     height: 100%;
-    /* border: dashed 4px #999; */
 }
 
 .backlog__box {
@@ -258,7 +257,7 @@
 
 }
 
-@media (min-width: 321px) and (max-width : 768px) { 
+@media (min-width: 481px) and (max-width : 768px) { 
     .content {
         flex-direction: column;
         justify-content: start;
@@ -301,9 +300,7 @@
     }
 }
 
-
-
-@media (max-width: 320px) { 
+@media (max-width: 480px) { 
     .content {
         display: block;
     }
