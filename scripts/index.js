@@ -3,11 +3,14 @@ const backlogs = document.querySelector('.backlog__elements');
 
 const userTemplate = document.querySelector('.user__template').content;
 const calendar = document.querySelector('.calendar__users');
-const calendarDate = document.querySelectorAll('.calendar__date')
-const calendarWeek = document.querySelector('.calendar__users')
+const calendarDate = document.querySelectorAll('.calendar__date');
+const calendarWeek = document.querySelector('.calendar__users');
 
 const previousWeekBtn = document.getElementById('previous-week-button');
 const nextWeekBtn = document.getElementById('next-week-button');
+
+const searchInput = document.getElementById('searchTask');
+const searchBtn = document.getElementById('searchBtn');
 
 const dateStart = new Date("2021-01-01");
 const dateEnd = new Date("2022-01-01");
@@ -49,9 +52,9 @@ fetch('https://varankin_dev.elma365.ru/api/extensions/2a38760e-083a-4dd0-aebc-78
         return res.json();
     })
     .then((data) => {
-        for (let i = 0; i < data.length; i++) {
-            users.push(data[i])
-        }
+        data.forEach((element) => {
+            users.push(element)
+        });
         renderUsers();
     })
     .catch((err) => {
@@ -63,9 +66,9 @@ fetch('https://varankin_dev.elma365.ru/api/extensions/2a38760e-083a-4dd0-aebc-78
         return res.json();
     })
     .then((data) => {
-        for (let i = 0; i < data.length; i++) {
-            tasks.push(data[i])
-        }
+        data.forEach((element) => {
+            tasks.push(element)
+        });
         renderTasks();
     })
     .catch((err) => {
@@ -81,9 +84,9 @@ function getUsers(data) {
     templateBoxUserId.id = data.id
     templateBoxUser.innerText = data.firstName;
 
-    for (let i = 0; i < templateBoxTask.length; i++) {
-        templateBoxTask[i].id = data.username + "-" + dateArray[day + i];
-    }
+    Array.from(templateBoxTask).forEach((element, i) => {
+        element.id = data.username + "-" + dateArray[day + i]
+    });
 
     return templateBox;
 }
@@ -139,27 +142,44 @@ function renderTasks() {
 
 function rerenderDate() {
     const calendarUsers = document.querySelectorAll('.calendar__user');
-    for (let i = 0; i < calendarUsers.length; i++) {
-        let calendarUsersTask = calendarUsers[i].querySelectorAll('.calendar__task')
-        for (let j = 0; j < calendarUsersTask.length; j++) {
-            calendarUsersTask[j].id = 'user' + calendarUsers[i].id + "-" + dateArray[day + j];
-        }
-    }
+    Array.from(calendarUsers).forEach((element) => {
+        let calendarUsersTask = element.querySelectorAll('.calendar__task')
+        Array.from(calendarUsersTask).forEach((item, i) => {
+            item.id = 'user' + element.id + "-" + dateArray[day + i];
+        });
+    });
 }
 
 function hiddenTasks() {
-    const currentBacklogs = document.querySelectorAll('.backlog__box[data-task-week="'+currentWeek+'"]')
-    for (let i = 0; i < currentBacklogs.length; i++) {
-        currentBacklogs[i].classList.add(`backlog__box_hidden`)
+    const currentBacklogs = document.querySelectorAll('.backlog__box[data-task-week="' + currentWeek + '"]');
+    Array.from(currentBacklogs).forEach((element) => {
+        element.classList.add(`backlog__box_hidden`)
     }
+    );
 }
 
 function unhiddenTasks() {
-    const currentBacklogs = document.querySelectorAll('.backlog__box[data-task-week="'+currentWeek+'"]')
-    for (let i = 0; i < currentBacklogs.length; i++) {
-        currentBacklogs[i].classList.remove(`backlog__box_hidden`)
+    const currentBacklogs = document.querySelectorAll('.backlog__box[data-task-week="' + currentWeek + '"]');
+    Array.from(currentBacklogs).forEach((element) => {
+        element.classList.remove(`backlog__box_hidden`)
     }
+    );
 }
+
+function searchTask() {
+    const tasksList = backlogs.querySelectorAll('.backlog__box')
+    Array.from(tasksList).forEach((element) => {
+        element.classList.remove(`backlog__box_hidden`)
+        if (element.innerText !== searchInput.value && searchInput.value) {
+            element.classList.add(`backlog__box_hidden`)
+        } 
+    })
+}
+
+searchBtn.addEventListener("mousedown", (evt) => {
+    evt.preventDefault();
+    searchTask();
+})
 
 previousWeekBtn.addEventListener("mousedown", (event) => {
     event.preventDefault();
@@ -170,7 +190,7 @@ previousWeekBtn.addEventListener("mousedown", (event) => {
     rerenderDate();
     unhiddenTasks()
     renderTasks();
-})
+});
 
 nextWeekBtn.addEventListener("mousedown", (event) => {
     event.preventDefault();
@@ -181,49 +201,49 @@ nextWeekBtn.addEventListener("mousedown", (event) => {
     rerenderDate();
     unhiddenTasks()
     renderTasks();
-})
+});
 
-document.addEventListener("drag", function (event) {
+document.addEventListener("drag", function (evt) {
 }, false);
 
-document.addEventListener("dragstart", function (event) {
-    dragged = event.target;
-    event.target.style.opacity = .5;
+document.addEventListener("dragstart", function (evt) {
+    dragged = evt.target;
+    evt.target.style.opacity = .5;
 }, false);
 
-document.addEventListener("dragend", function (event) {
-    event.target.style.opacity = "";
+document.addEventListener("dragend", function (evt) {
+    evt.target.style.opacity = "";
 }, false);
 
-document.addEventListener("dragover", function (event) {
-    event.preventDefault();
+document.addEventListener("dragover", function (evt) {
+    evt.preventDefault();
 }, false);
 
-document.addEventListener("dragenter", function (event) {
-    if (event.target.className == "calendar__task") {
-        event.target.style.background = "#CFFFCA";
-    } else if (event.target.className == "backlog__elements") {
-        event.target.style.border = "dashed 4px #999999";
+document.addEventListener("dragenter", function (evt) {
+    if (evt.target.className == "calendar__task") {
+        evt.target.style.background = "#CFFFCA";
+    } else if (evt.target.className == "backlog__elements") {
+        evt.target.style.border = "dashed 4px #999999";
     }
 }, false);
 
-document.addEventListener("dragleave", function (event) {
-    if (event.target.className == "calendar__task") {
-        event.target.style.background = "";
-    } else if (event.target.className == "backlog__elements") {
-        event.target.style.border = "";
+document.addEventListener("dragleave", function (evt) {
+    if (evt.target.className == "calendar__task") {
+        evt.target.style.background = "";
+    } else if (evt.target.className == "backlog__elements") {
+        evt.target.style.border = "";
     }
 }, false);
 
-document.addEventListener("drop", function (event) {
-    event.preventDefault();
+document.addEventListener("drop", function (evt) {
+    evt.preventDefault();
     const draggedBoxTitle = dragged.querySelector('.backlog__box-name');
     const draggedBoxText = dragged.querySelector('.backlog__box-text');
     const draggedBoxTaskText = dragged.querySelector('.backlog__box-task-text');
-    const currentTask = document.getElementById('user' + event.target.parentElement.id + '-' + dragged.getAttribute("data-start-date"));
+    const currentTask = document.getElementById('user' + evt.target.parentElement.id + '-' + dragged.getAttribute("data-start-date"));
 
-    if (event.target.className == "calendar__task") {
-        event.target.style.background = "";
+    if (evt.target.className == "calendar__task") {
+        evt.target.style.background = "";
         dragged.parentNode.removeChild(dragged);
 
         dragged.classList.add(`backlog__box_selected`);
@@ -232,10 +252,12 @@ document.addEventListener("drop", function (event) {
         draggedBoxTaskText.style.display = "flex";
         dragged.setAttribute("data-task-week", currentWeek);
 
-        event.target.appendChild(dragged);
+        evt.target.appendChild(dragged);
 
-    } else if (event.target.className == "backlog__elements") {
-        event.target.style.border = "";
+        return
+
+    } else if (evt.target.className == "backlog__elements") {
+        evt.target.style.border = "";
         dragged.parentNode.removeChild(dragged);
 
         dragged.classList.remove(`backlog__box_selected`);
@@ -244,9 +266,11 @@ document.addEventListener("drop", function (event) {
         draggedBoxTaskText.style.display = "none";
         dragged.setAttribute("data-task-week", "");
 
-        event.target.appendChild(dragged);
+        evt.target.appendChild(dragged);
 
-    } else if (event.target.className == "calendar__user-name" && currentTask) {
+        return
+
+    } else if (evt.target.className == "calendar__user-name" && currentTask) {
         dragged.parentNode.removeChild(dragged);
 
         dragged.classList.add(`backlog__box_selected`);
@@ -255,7 +279,10 @@ document.addEventListener("drop", function (event) {
         draggedBoxTaskText.style.display = "flex";
 
         currentTask.appendChild(dragged);
+
+        return
     }
+
 }, false);
 
-renderDate(dateArray)
+renderDate(dateArray);
